@@ -36,7 +36,7 @@ $$
 \hat{H} = \sum_i \delta_i \sigma_i^z + \sum_i \Delta_i \sigma_i^x + \sum_{i \lt j} J_{ij} \sigma_i^x \sigma_j^x
 $$
 
-**Mathematical explanation**: The Hamiltonian acts on an N-qubit Hilbert space $\mathcal{H} = (\mathbb{C}^2)^{\otimes N}$. Each country $i$ is a qubit with basis states $|0\rangle \equiv |L\rangle$ (liberalize) and $|1\rangle \equiv |R\rangle$ (restrict). The Pauli operators $\sigma_i^z$ and $\sigma_i^x$ act on qubit $i$ only. The first term is the *detuning*: $\delta_i > 0$ biases toward $|R\rangle$, $\delta_i < 0$ toward $|L\rangle$. The second term is *tunneling*: $\Delta_i$ allows coherent transitions between $|L\rangle$ and $|R\rangle$ (policy flexibility). The third term is *Ising-type coupling*: $J_{ij} \sigma_i^x \sigma_j^x$ creates correlations between countries $i$ and $j$—when one flips, the other is nudged to flip as well. $J_{ij}$ is derived from bilateral trade shares (import dependency).
+**Mathematical explanation**: The Hamiltonian acts on an N-qubit Hilbert space $\mathcal{H} = (\mathbb{C}^2)^{\otimes N}$. Each country $i$ is a qubit with basis states $|0\rangle \equiv |L\rangle$ (liberalize) and $|1\rangle \equiv |R\rangle$ (restrict). The Pauli operators $\sigma_i^z$ and $\sigma_i^x$ act on qubit $i$ only. The first term is the *detuning*: $\delta_i > 0$ biases toward $|R\rangle$, $\delta_i \lt 0$ toward $|L\rangle$. The second term is *tunneling*: $\Delta_i$ allows coherent transitions between $|L\rangle$ and $|R\rangle$ (policy flexibility). The third term is *Ising-type coupling*: $J_{ij} \sigma_i^x \sigma_j^x$ creates correlations between countries $i$ and $j$—when one flips, the other is nudged to flip as well. $J_{ij}$ is derived from bilateral trade shares (import dependency).
 
 **Layman's explanation**: Think of each country as a compass needle that can point “liberalize” or “restrict.” The detuning $\delta_i$ is the domestic pressure: import-dependent countries feel a pull toward restriction when prices spike. The tunneling $\Delta_i$ is how easily a country can change its mind before committing. The coupling $J_{ij}$ is the trade link: if Russia restricts, Egypt (which imports 60% from Russia) is more likely to restrict too, because their “needles” are connected.
 
@@ -74,7 +74,7 @@ $$
 \rho_i = \mathrm{Tr}_{j \neq i}[\rho]
 $$
 
-**Mathematical explanation**: The full density matrix $\rho$ lives on $\mathcal{H}^{\otimes N}$. To obtain the state of country $i$ alone, we trace out all other degrees of freedom: $\rho_i = \mathrm{Tr}_{j \neq i}[\rho]$. This yields a $2 \times 2$ density matrix for qubit $i$. If $\rho$ is entangled, $\rho_i$ is mixed ($\mathrm{Tr}(\rho_i^2) < 1$); if $\rho$ is separable, $\rho_i$ can be pure.
+**Mathematical explanation**: The full density matrix $\rho$ lives on $\mathcal{H}^{\otimes N}$. To obtain the state of country $i$ alone, we trace out all other degrees of freedom: $\rho_i = \mathrm{Tr}_{j \neq i}[\rho]$. This yields a $2 \times 2$ density matrix for qubit $i$. If $\rho$ is entangled, $\rho_i$ is mixed ($\mathrm{Tr}(\rho_i^2) \lt 1$); if $\rho$ is separable, $\rho_i$ can be pure.
 
 **Layman's explanation**: The reduced density matrix $\rho_i$ answers: “If we ignore all other countries and look only at country $i$, what is its effective state?” It captures both the local bias (diagonal elements) and how much that country is still in a superposition (off-diagonal elements), given its entanglement with the rest of the network.
 
@@ -180,18 +180,23 @@ Each annual timestep follows an alternating Schrödinger / Lindblad loop:
 
 ## Output Figures
 
-The simulation produces **5 figures** (1 from the core simulation, 4 from the wavefunction visualisation):
+The simulation produces **5 figures** (1 from the core simulation, 4 from the wavefunction visualisation). Figures are saved to the `figures/` directory.
+
+> **Student guide:** For detailed, step-by-step captions to follow each figure, open **`figures/FIGURES_CAPTIONS.md`** alongside the figures. It explains every panel, how to read the axes, and what to look for.
 
 ### 1. `quantum_wheat_synthetic.png` (core simulation)
 
-A 6-panel figure:
+A 6-panel figure summarising the main simulation output:
 
-- **Panel 6a**: Synthetic world wheat price signal over 20 years, with a crisis spike at year 10. Shows the exogenous driver of the model.
-- **Panel 6b**: Restriction probabilities for exporters (Russia, USA) over time. Expect lower baseline P(R) and a rise during the crisis.
-- **Panel 6c**: Restriction probabilities for importers (Egypt, Tunisia, Lebanon). Expect higher P(R) and stronger crisis response.
-- **Panel 6d**: System purity Tr(ρ²). Values near 1 indicate a nearly pure (coherent) state; values below 1 indicate decoherence. Watch for dips during the Lindblad phase and recovery during the Schrödinger phase.
-- **Panel 6e**: Phase space (Russia vs. Egypt). Each point is a year; colour indicates time. The trajectory shows how the two countries’ restriction probabilities co-evolve—look for clustering near the crisis.
-- **Panel 6f**: Policy correlation matrix: baseline (years 0–9) vs. post-crisis (years 10–19). Red = correlated, blue = anticorrelated. Expect increased correlation among importers and between Russia and its import partners after the crisis.
+| Panel | Content | Key takeaway |
+|-------|---------|--------------|
+| **6a** | Synthetic world wheat price signal (20 years, crisis spike at year 10) | Exogenous driver; dashed line marks crisis |
+| **6b** | P(restrict) for exporters (Russia, USA) | Exporters have lower P(R); compare crisis response |
+| **6c** | P(restrict) for importers (Egypt, Tunisia, Lebanon) | Importers more vulnerable; higher P(R) and stronger crisis response |
+| **6d** | System purity Tr(ρ²) | 1 = pure/coherent; \<1 = decoherence; watch dips and recovery |
+| **6e** | Phase space: Russia vs. Egypt (each point = one year, colour = time) | Trajectory shows co-evolution; red star = crisis |
+| **6f** | Policy correlation matrix: baseline (left) vs. post-crisis (right) | Red = correlated; key result: Russia–importer correlations increase after crisis |
+
 
 ### 2. `wavefunction_bloch_components.png`
 
@@ -244,4 +249,4 @@ python src/quantum_wheat_synthetic.py
 python src/quantum_wheat_wavefunctions.py
 ```
 
-Figures are saved to the `figures/` directory.
+Figures are saved to the `figures/` directory. Open `figures/FIGURES_CAPTIONS.md` for detailed, step-by-step captions to follow each figure.

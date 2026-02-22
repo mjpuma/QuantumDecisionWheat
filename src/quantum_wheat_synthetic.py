@@ -153,10 +153,8 @@ def build_hamiltonian(delta_t):
 
 def lindblad_collapse_operators():
     """
-    Collapse operators Lₖ for each country:
-      L_R^(i) = √γᵢ  σᵢ⁺   (collapse toward |R⟩ = restriction)
-      L_L^(i) = √γᵢ  σᵢ⁻   (collapse toward |L⟩ = liberalize)
-    Here we use σᶻ dephasing as a simple decoherence model.
+    Lindblad operators Lₖ = √γₖ σₖᶻ for dephasing at each site.
+    Dephasing suppresses off-diagonal coherence (phase between |L⟩ and |R⟩).
     """
     ops = []
     for i in range(N):
@@ -199,7 +197,7 @@ def restriction_probability(rho, site):
     P(restrict)ᵢ = Tr[ ρ  Πᵢ^R ]
     Πᵢ^R projects site i onto |1⟩ (restrict = spin-up convention).
     """
-    proj_up = np.array([[1, 0], [0, 0]], dtype=complex)   # |1⟩⟨1|
+    proj_up = np.array([[0, 0], [0, 1]], dtype=complex)   # |1⟩⟨1| projects onto restrict
     Pi = kron_op(proj_up, site)
     return np.trace(Pi @ rho).real
 

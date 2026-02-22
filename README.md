@@ -62,9 +62,9 @@ $$
 \frac{d\rho}{dt} = -i[\hat{H}, \rho] + \sum_k \gamma_k \left( \hat{L}_k \rho \hat{L}_k^\dagger - \frac{1}{2}\{\hat{L}_k^\dagger \hat{L}_k, \rho\} \right)
 $$
 
-**Mathematical explanation**: The Lindblad equation is the most general form of a Markovian, trace-preserving, completely positive quantum master equation. The first term $-i[\hat{H}, \rho]$ is the unitary (von Neumann) evolution. The second term describes decoherence: each Lindblad operator $\hat{L}_k$ models a channel through which the system couples to the environment. In our implementation, we use $\hat{L}_k = \sqrt{\gamma_k} \sigma_k^z$ (dephasing), which suppresses off-diagonal coherence of qubit $k$ at rate $\gamma_k$. The anticommutator $\{\hat{L}_k^\dagger \hat{L}_k, \rho\}$ ensures trace preservation.
+**Mathematical explanation**: The Lindblad equation is the most general form of a Markovian, trace-preserving, completely positive quantum master equation. The first term $-i[\hat{H}, \rho]$ is the unitary (von Neumann) evolution. The second term describes decoherence. In our implementation we use: (1) *Dephasing*: $\hat{L} = \sqrt{\gamma_k} \sigma_k^z$ suppresses off-diagonal coherence. (2) *Amplitude damping*: when $\delta_k > 0$ (crisis pressure), $\hat{L} \propto \sigma_k^+$ pumps toward $|R\rangle$ (restrict); when $\delta_k < 0$, $\hat{L} \propto \sigma_k^-$ pumps toward $|L\rangle$ (liberalize). This produces a sharp crisis response as policy collapses toward the Hamiltonian-favored state.
 
-**Layman's explanation**: When a country announces its policy (or when news, rumors, and market signals accumulate), the “quantum fog” of uncertainty collapses. The Lindblad term models this: $\gamma_k$ is how often country $k$’s policy gets “measured” by the environment (announcements, press releases). High $\gamma$ means rapid decoherence—the country quickly commits to a definite policy.
+**Layman's explanation**: When a country announces its policy (or when news, rumors, and market signals accumulate), the “quantum fog” of uncertainty collapses. The Lindblad term models this: dephasing kills coherence, while amplitude damping pushes each country toward restrict or liberalize depending on the crisis pressure ($\delta$). High price → high $\delta$ for importers → collapse toward restrict.
 
 ---
 

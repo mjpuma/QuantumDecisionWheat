@@ -89,18 +89,18 @@ gamma = np.array([0.15, 0.12, 0.20, 0.25, 0.30])
 
 years = np.arange(T_YEARS)
 
-def price_signal(t, crisis_year=10, crisis_height=1.8, crisis_width=2.0):
+def price_signal(t, crisis_year=10, crisis_height=2.5, crisis_width=1.0):
     """Normalised price deviation from long-run mean (0 = average)."""
-    baseline = 0.15 * np.sin(2 * np.pi * t / 6)          # ~6-year commodity cycle
+    baseline = 0.1 * np.sin(2 * np.pi * t / 6)           # mild commodity cycle
     crisis   = crisis_height * np.exp(-((t - crisis_year)**2) / (2 * crisis_width**2))
-    noise    = 0.05 * rng.standard_normal()
+    noise    = 0.02 * rng.standard_normal()
     return baseline + crisis + noise
 
 price_series = np.array([price_signal(t) for t in years])
 
 # Map price to country-specific detuning: δᵢ(t) = δ_base_i + wᵢ × p(t)
-# Importers are more sensitive to price spikes than exporters
-price_sensitivity = np.array([0.2, 0.2, 0.9, 1.1, 1.3])
+# Exporters (Russia, USA) also respond to crisis—e.g. Russia 2010 restricted when prices spiked
+price_sensitivity = np.array([0.55, 0.50, 1.2, 1.4, 1.6])  # exporters + importers respond
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -151,14 +151,23 @@ def build_hamiltonian(delta_t):
     return H
 
 
-def lindblad_collapse_operators():
+def lindblad_collapse_operators(delta_t):
     """
-    Lindblad operators Lₖ = √γₖ σₖᶻ for dephasing at each site.
-    Dephasing suppresses off-diagonal coherence (phase between |L⟩ and |R⟩).
+    Lindblad operators: dephasing (σᶻ) + amplitude damping toward |R⟩ or |L⟩.
+    When δᵢ > 0 (crisis pressure): L ∝ σ⁺ pushes toward restrict.
+    When δᵢ < 0: L ∝ σ⁻ pushes toward liberalize.
+    This produces a sharp crisis response as policy "collapses" toward the favored state.
     """
     ops = []
+    amp_scale = 1.2   # strength of amplitude damping (collapse toward δ-favored state)
     for i in range(N):
         ops.append(np.sqrt(gamma[i]) * kron_op(sz, i))   # dephasing
+        d = delta_t[i]
+        rate = amp_scale * gamma[i] * (abs(d) + 0.1)     # avoid sqrt(0)
+        if d > 0:
+            ops.append(np.sqrt(rate) * kron_op(sm, i))    # σ⁻†=σ⁺ raises |0⟩→|1⟩: collapse toward |R⟩
+        else:
+            ops.append(np.sqrt(rate) * kron_op(sp, i))    # σ⁺†=σ⁻ lowers |1⟩→|0⟩: collapse toward |L⟩
     return ops
 
 
@@ -223,8 +232,6 @@ rho = np.outer(psi0, psi0.conj())   # pure state density matrix
 #       (d) record restriction probabilities
 # ═══════════════════════════════════════════════════════════════════════════════
 
-L_ops = lindblad_collapse_operators()
-
 prob_history  = np.zeros((T_YEARS, N))   # P(restrict) per country per year
 entanglement  = np.zeros(T_YEARS)        # purity Tr(ρ²) as proxy
 
@@ -235,11 +242,12 @@ for t_idx, t in enumerate(years):
     delta_t = delta_base + price_sensitivity * p_t
 
     H = build_hamiltonian(delta_t)
+    L_ops = lindblad_collapse_operators(delta_t)  # time-dependent: collapse toward δ-favored state
 
     # (b) Schrödinger — coherent half-year
     rho = schrodinger_evolve(rho, H, dt=0.7, steps=40)
 
-    # (c) Lindblad — decoherence half-year (announcement season)
+    # (c) Lindblad — decoherence + amplitude damping (announcement season)
     rho = lindblad_evolve(rho, H, L_ops, dt=0.3, steps=20)
 
     # (d) Observables

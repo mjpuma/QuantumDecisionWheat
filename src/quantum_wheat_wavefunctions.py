@@ -43,7 +43,7 @@ J_sym = (J + J.T) / 2
 delta_base       = np.array([-0.3, -0.4,  0.2,  0.3,  0.4])
 Delta            = np.array([ 0.5,  0.6,  0.3,  0.2,  0.15])
 gamma            = np.array([ 0.15, 0.12, 0.20, 0.25, 0.30])
-price_sensitivity= np.array([ 0.2,  0.2,  0.9,  1.1,  1.3])
+price_sensitivity= np.array([ 0.55, 0.50, 1.2,  1.4,  1.6])  # exporters + importers respond
 
 years = np.arange(T_YEARS)
 
@@ -51,12 +51,11 @@ years = np.arange(T_YEARS)
 def price_signal(t):
     """
     Synthetic price deviation from long-run mean at year t.
-    Combines a baseline commodity cycle, a Gaussian crisis spike at crisis_year,
-    and small random noise.
+    Gaussian crisis spike at crisis_year (width=1.0 for sharp response).
     """
-    baseline = 0.15 * np.sin(2 * np.pi * t / 6)
-    crisis   = 1.8  * np.exp(-((t - crisis_year)**2) / (2 * 2.0**2))
-    noise    = 0.05 * rng.standard_normal()
+    baseline = 0.1 * np.sin(2 * np.pi * t / 6)
+    crisis   = 2.5 * np.exp(-((t - crisis_year)**2) / 2)
+    noise    = 0.02 * rng.standard_normal()
     return baseline + crisis + noise
 
 
@@ -95,12 +94,25 @@ def build_hamiltonian(delta_t):
     return H
 
 
-def lindblad_collapse_operators():
+def lindblad_collapse_operators(delta_t):
     """
-    Return Lindblad operators Lₖ = √γₖ σₖᶻ for dephasing at each site.
+    Lindblad operators: dephasing (σᶻ) + amplitude damping toward |R⟩ or |L⟩.
+    When δᵢ > 0: collapse toward restrict (σ⁺). When δᵢ < 0: toward liberalize (σ⁻).
     """
     sz = np.array([[1, 0], [0, -1]], dtype=complex)
-    return [np.sqrt(gamma[i]) * kron_op(sz, i) for i in range(N)]
+    sp = np.array([[0, 1], [0, 0]], dtype=complex)  # σ⁺ raise to |R⟩
+    sm = np.array([[0, 0], [1, 0]], dtype=complex)  # σ⁻ lower to |L⟩
+    ops = []
+    amp_scale = 1.2
+    for i in range(N):
+        ops.append(np.sqrt(gamma[i]) * kron_op(sz, i))
+        d = delta_t[i]
+        rate = amp_scale * gamma[i] * (abs(d) + 0.1)
+        if d > 0:
+            ops.append(np.sqrt(rate) * kron_op(sm, i))   # sm=σ⁺ raises |0⟩→|1⟩: toward |R⟩
+        else:
+            ops.append(np.sqrt(rate) * kron_op(sp, i))   # sp=σ⁻ lowers |1⟩→|0⟩: toward |L⟩
+    return ops
 
 
 def lindblad_rhs(rho, L_ops, H):
@@ -188,8 +200,6 @@ def run_simulation_and_plot():
         psi0 = np.kron(psi0, plus)
     rho = np.outer(psi0, psi0.conj())
 
-    L_ops = lindblad_collapse_operators()
-
     bloch_history = np.zeros((T_YEARS, N, 3))
     coherence     = np.zeros((T_YEARS, N))
     basis_snapshots = {}
@@ -201,6 +211,7 @@ def run_simulation_and_plot():
         p_t     = price_series[t_idx]
         delta_t = delta_base + price_sensitivity * p_t
         H       = build_hamiltonian(delta_t)
+        L_ops   = lindblad_collapse_operators(delta_t)
 
         rho = schrodinger_evolve(rho, H, dt=0.7, steps=40)
 

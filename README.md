@@ -33,7 +33,7 @@ This framework naturally produces:
 ### 1. The N-Country Hamiltonian
 
 $$
-\hat{H} = \sum_i \delta_i \sigma_i^z + \sum_i \Delta_i \sigma_i^x + \sum_{i<j} J_{ij} \sigma_i^x \sigma_j^x
+\hat{H} = \sum_i \delta_i \sigma_i^z + \sum_i \Delta_i \sigma_i^x + \sum_{i \lt j} J_{ij} \sigma_i^x \sigma_j^x
 $$
 
 **Mathematical explanation**: The Hamiltonian acts on an N-qubit Hilbert space $\mathcal{H} = (\mathbb{C}^2)^{\otimes N}$. Each country $i$ is a qubit with basis states $|0\rangle \equiv |L\rangle$ (liberalize) and $|1\rangle \equiv |R\rangle$ (restrict). The Pauli operators $\sigma_i^z$ and $\sigma_i^x$ act on qubit $i$ only. The first term is the *detuning*: $\delta_i > 0$ biases toward $|R\rangle$, $\delta_i < 0$ toward $|L\rangle$. The second term is *tunneling*: $\Delta_i$ allows coherent transitions between $|L\rangle$ and $|R\rangle$ (policy flexibility). The third term is *Ising-type coupling*: $J_{ij} \sigma_i^x \sigma_j^x$ creates correlations between countries $i$ and $j$—when one flips, the other is nudged to flip as well. $J_{ij}$ is derived from bilateral trade shares (import dependency).

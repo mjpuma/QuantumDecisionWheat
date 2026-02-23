@@ -236,17 +236,32 @@ This repository implements **synthetic validation** of the quantum wheat trade m
 
 ---
 
+## Network Configurations
+
+| Script | Countries | N | Coupling type | Crisis year | T |
+|--------|------------|---|---------------|-------------|---|
+| `run_2country.py` | France, Russia | 2 | Market overlap (shared MENA exports) | 5 | 12 |
+| `run_5country.py` | Russia, USA, Egypt, Tunisia, Lebanon | 5 | Import dependency | 10 | 20 |
+| `run_faostat.py` | TBD from data | N | Import dependency | from data | from data |
+
+> **Coupling type matters for interpretation.** In the 5-country model, J[i,j] is the fraction of country i's wheat imports from country j — a supply-chain dependency. In the 2-country France–Russia model, J[i,j] is the fraction of shared MENA export market overlap — a competitive coupling. The Hamiltonian form is identical; the physical meaning of entanglement differs.
+
+---
+
 ## Usage
 
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
-# Run core simulation (produces quantum_wheat_synthetic.png)
-python src/quantum_wheat_synthetic.py
+# Run 2-country France–Russia pedagogical demo (market-overlap coupling)
+python scripts/run_2country.py [--show-math] [--no-figures]
 
-# Run wavefunction visualisation (produces 4 additional figures)
-python src/quantum_wheat_wavefunctions.py
+# Run 5-country synthetic demo (import-dependency coupling)
+python scripts/run_5country.py
+
+# Run wavefunction visualisation (produces 4 figures)
+python scripts/run_wavefunction_viz.py
 ```
 
 Figures are saved to the `figures/` directory. Open `figures/FIGURES_CAPTIONS.md` for detailed, step-by-step captions to follow each figure.

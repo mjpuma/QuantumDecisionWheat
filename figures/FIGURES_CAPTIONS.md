@@ -8,7 +8,7 @@
 
 **Overall:** This is the main output of the core simulation. It shows how the 5-country quantum system responds to a synthetic wheat price crisis over 20 years.
 
-### Panel 6a — Price Signal (top, full width)
+### Panel a — Price Signal (top, full width)
 
 **What it shows:** The exogenous driver of the model: world wheat price deviation from its long-run mean. Values above zero mean prices are higher than average.
 
@@ -21,7 +21,7 @@
 
 ---
 
-### Panel 6b — Exporters: P(Restrict) (middle left)
+### Panel b — Exporters: P(Restrict) (middle left)
 
 **What it shows:** The probability that Russia (red) and USA (blue) will restrict wheat exports in each year.
 
@@ -34,17 +34,17 @@
 
 ---
 
-### Panel 6c — Importers: P(Restrict / Hoard) (middle right)
+### Panel c — Importers: P(Restrict / Hoard) (middle right)
 
 **What it shows:** The probability that Egypt (green), Tunisia (orange), and Lebanon (purple) will restrict imports or hoard in each year.
 
-**How to read it:** Same axes as Panel 6b. Importers have positive δ_base and higher price sensitivity (w), so they are more vulnerable to price spikes.
+**How to read it:** Same axes as Panel b. Importers have positive δ_base and higher price sensitivity (w), so they are more vulnerable to price spikes.
 
 **What to look for:** Importers should generally have higher P(restrict) than exporters in baseline years, and a stronger response to the crisis. Lebanon (most vulnerable, w=1.3) may show the largest crisis response. Compare the three importers: their correlation with Russia (via J) affects how they move together.
 
 ---
 
-### Panel 6d — System Purity Tr(ρ²) (bottom left)
+### Panel d — System Purity Tr(ρ²) (bottom left)
 
 **What it shows:** The purity of the full N-qubit density matrix. Tr(ρ²) = 1 for a pure state (fully coherent); Tr(ρ²) < 1 for a mixed state (decoherence has occurred).
 
@@ -57,7 +57,7 @@
 
 ---
 
-### Panel 6e — Phase Space: Russia vs Egypt (bottom right)
+### Panel e — Phase Space: Russia vs Egypt (bottom right)
 
 **What it shows:** A 2D phase portrait of how Russia’s and Egypt’s restriction probabilities co-evolve. Each point is one year; colour indicates time (purple = early, yellow = late).
 
@@ -71,7 +71,7 @@
 
 ---
 
-### Panel 6f — Policy Correlation Matrix (bottom, full width)
+### Panel f — Policy Correlation Matrix (bottom, full width)
 
 **What it shows:** Two 5×5 correlation matrices side by side. **Left:** Correlation of P(restrict) across countries in baseline years (0–9). **Right:** Same for post-crisis years (10–19). Each cell is the Pearson correlation between one country’s P(restrict) time series and another’s.
 

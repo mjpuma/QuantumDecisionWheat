@@ -58,7 +58,7 @@ def main() -> None:
     fig = plt.figure(figsize=(14, 16))
     gs = gridspec.GridSpec(4, 2, figure=fig, hspace=0.45, wspace=0.35)
 
-    # 6a. Price signal
+    # a. Price signal
     ax0 = fig.add_subplot(gs[0, :])
     ax0.fill_between(years, price_series, alpha=0.3, color="#e74c3c")
     ax0.plot(years, price_series, color="#c0392b", lw=2)
@@ -72,7 +72,7 @@ def main() -> None:
     ax0.legend(fontsize=9)
     ax0.set_xlim(0, T_YEARS - 1)
 
-    # 6b. Exporters: P(restrict)
+    # b. Exporters: P(restrict)
     ax1 = fig.add_subplot(gs[1, 0])
     for i in [0, 1]:
         ax1.plot(years, prob_history[:, i], color=COLORS[i],
@@ -98,7 +98,7 @@ def main() -> None:
     ax2.legend(fontsize=9)
     ax2.set_xlim(0, T_YEARS - 1)
 
-    # 6d. System purity
+    # d. System purity
     ax3 = fig.add_subplot(gs[2, 0])
     ax3.plot(years, entanglement, color="#2c3e50", lw=2)
     ax3.axvline(crisis_year, color="#e74c3c", lw=1.5, ls=":", alpha=0.6)
@@ -110,7 +110,7 @@ def main() -> None:
     ax3.set_ylim(0, 1.05)
     ax3.set_xlim(0, T_YEARS - 1)
 
-    # 6e. Phase space: Russia vs Egypt
+    # e. Phase space: Russia vs Egypt
     ax4 = fig.add_subplot(gs[2, 1])
     sc = ax4.scatter(prob_history[:, 0], prob_history[:, 2],
                      c=years, cmap="viridis", s=60, zorder=3)
@@ -127,7 +127,7 @@ def main() -> None:
     ax4.set_ylim(0, 1)
     ax4.legend(fontsize=9)
 
-    # 6f. Correlation heatmap
+    # f. Correlation heatmap
     ax5 = fig.add_subplot(gs[3, :])
     baseline = prob_history[:crisis_year, :]
     post = prob_history[crisis_year:, :]

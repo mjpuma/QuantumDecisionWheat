@@ -190,12 +190,12 @@ A 6-panel figure summarising the main simulation output:
 
 | Panel | Content | Key takeaway |
 |-------|---------|--------------|
-| **6a** | Synthetic world wheat price signal (20 years, crisis spike at year 10) | Exogenous driver; dashed line marks crisis |
-| **6b** | P(restrict) for exporters (Russia, USA) | Exporters have lower P(R); compare crisis response |
-| **6c** | P(restrict) for importers (Egypt, Tunisia, Lebanon) | Importers more vulnerable; higher P(R) and stronger crisis response |
-| **6d** | System purity Tr(ρ²) | 1 = pure/coherent; \<1 = decoherence; watch dips and recovery |
-| **6e** | Phase space: Russia vs. Egypt (each point = one year, colour = time) | Trajectory shows co-evolution; red star = crisis |
-| **6f** | Policy correlation matrix: baseline (left) vs. post-crisis (right) | Red = correlated; key result: Russia–importer correlations increase after crisis |
+| **a** | Synthetic world wheat price signal (20 years, crisis spike at year 10) | Exogenous driver; dashed line marks crisis |
+| **b** | P(restrict) for exporters (Russia, USA) | Exporters have lower P(R); compare crisis response |
+| **c** | P(restrict) for importers (Egypt, Tunisia, Lebanon) | Importers more vulnerable; higher P(R) and stronger crisis response |
+| **d** | System purity Tr(ρ²) | 1 = pure/coherent; \<1 = decoherence; watch dips and recovery |
+| **e** | Phase space: Russia vs. Egypt (each point = one year, colour = time) | Trajectory shows co-evolution; red star = crisis |
+| **f** | Policy correlation matrix: baseline (left) vs. post-crisis (right) | Red = correlated; key result: Russia–importer correlations increase after crisis |
 
 
 ### 2. `wavefunction_bloch_components.png`
